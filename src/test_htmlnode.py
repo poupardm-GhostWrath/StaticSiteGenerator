@@ -50,7 +50,7 @@ class TestHTMLNode(unittest.TestCase):
             self.assertEqual(node.to_html(), testCaseOutput[test])
     """
 
-
+    """
     def test_to_html_with_children(self):
         child_node = LeafNode("span", "child")
         parent_node = ParentNode("div", [child_node])
@@ -64,3 +64,30 @@ class TestHTMLNode(unittest.TestCase):
             parent_node.to_html(),
             "<div><span><b>grandchild</b></span></div>",
         )
+    """
+    def test_eq(self):
+        testCase = {
+            TextType.TEXT:["This is a text node"],
+            TextType.BOLD:["This is a bold node"],
+            TextType.ITALIC:["This is an italic node"],
+            TextType.CODE:["This is a code node"],
+            TextType.LINK:["This is a link node", {"href":"https://www.boot.dev"}],
+            TextType.IMAGE:["This is an image node", {"src":"~/banana.png"}],
+        }
+        testCaseOutput = {
+            TextType.TEXT:[None, "This is a text node"],
+            TextType.BOLD:["b", "This is a bold node"],
+            TextType.ITALIC:["i", "This is an italic node"],
+            TextType.CODE:["code", "This is a code node"],
+            TextType.LINK:["a", "This is a link node"],
+            TextType.IMAGE:["img", "This is an image node"],
+        }
+        for test in testCase:
+            node = None
+            if len(testCase[test]) < 2:
+                node = TextNode(testCase[test][0], test)
+            else:
+                node = TextNode(testCase[test][0], test, testCase[test][1])
+            html_node = text_node_to_html_node(node)
+            self.assertEqual(html_node.tag, testCaseOutput[test][0])
+            self.assertEqual(html_node.value, testCaseOutput[test][1])

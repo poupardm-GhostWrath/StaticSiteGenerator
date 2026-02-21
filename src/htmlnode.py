@@ -28,7 +28,7 @@ class LeafNode(HTMLNode):
 
     def to_html(self):
         if self.value is None:
-            raise ValueError("value is None")
+            raise ValueError("Error: value is None")
         if self.tag is None:
             return self.value
         else:
@@ -50,12 +50,32 @@ class ParentNode(HTMLNode):
 
     def to_html(self):
         if self.tag is None:
-            raise ValueError("tag is missing")
+            raise ValueError("Error: tag is missing")
         if self.children is None:
-            raise ValueError("children are missing")
+            raise ValueError("Error: children are missing")
         output = f"<{self.tag}>"
         for child in self.children:
             output += child.to_html()
         output += f"</{self.tag}>"
         return output
+    
+def text_node_to_html_node(text_node):
+    if text_node is None:
+        raise Exception("Error: Node is NoneType")
+    match text_node.text_type:
+        case TextType.TEXT:
+            return LeafNode(None, text_node.text)
+        case TextType.BOLD:
+            return LeafNode("b", text_node.text)
+        case TextType.ITALIC:
+            return LeafNode("i", text_node.text)
+        case TextType.CODE:
+            return LeafNode("code", text_node.text)
+        case TextType.LINK:
+            return LeafNode("a", text_node.text, {"href":text_node.url})
+        case TextType.IMAGE:
+            return LeafNode("img", text_node.text, {"src":text_node.url})
+        case _:
+            raise Exception("Error: Invalid Text Type")
+
                 
