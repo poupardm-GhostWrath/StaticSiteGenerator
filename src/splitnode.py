@@ -1,4 +1,5 @@
 from textnode import *
+from extract_markdown import *
 
 def split_nodes_delimiter(old_nodes, delimiter, text_type):
     new_nodes = []
@@ -17,4 +18,42 @@ def split_nodes_delimiter(old_nodes, delimiter, text_type):
                         new_nodes.append(TextNode(split_node[i], text_type))
                     else:
                         new_nodes.append(TextNode(split_node[i], TextType.TEXT))
+    return new_nodes
+
+def split_nodes_image(old_nodes):
+    new_nodes = []
+    for node in old_nodes:
+        if node.text_type is not TextType.TEXT:
+            new_nodes.append(node)
+        else:
+            delimiters = extract_markdown_images(node.text)
+            remainder = node.text
+            for i in range(0, len(delimiters)):
+                image_alt = delimiters[i][0]
+                image_link = delimiters[i][1]
+                split_node = remainder.split(f"![{image_alt}]({image_link})", 1)
+                new_nodes.append(TextNode(split_node[0], TextType.TEXT))
+                new_nodes.append(TextNode(image_alt, TextType.IMAGE, image_link))
+                remainder = split_node[1]
+            if remainder != "":
+                new_nodes.append(TextNode(remainder, TextType.TEXT))
+    return new_nodes
+
+def split_nodes_link(old_nodes):
+    new_nodes = []
+    for node in old_nodes:
+        if node.text_type is not TextType.TEXT:
+            new_nodes.append(node)
+        else:
+            delimiters = extract_markdown_links(node.text)
+            remainder = node.text
+            for i in range(0, len(delimiters)):
+                link_text = delimiters[i][0]
+                link_url = delimiters[i][1]
+                split_node = remainder.split(f"[{link_text}]({link_url})", 1)
+                new_nodes.append(TextNode(split_node[0], TextType.TEXT))
+                new_nodes.append(TextNode(link_text, TextType.LINK, link_url))
+                remainder = split_node[1]
+            if remainder != "":
+                new_nodes.append(TextNode(remainder, TextType.TEXT))
     return new_nodes
