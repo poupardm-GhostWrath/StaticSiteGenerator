@@ -57,3 +57,57 @@ def split_nodes_link(old_nodes):
             if remainder != "":
                 new_nodes.append(TextNode(remainder, TextType.TEXT))
     return new_nodes
+
+def split_nodes_bold(old_nodes):
+    new_nodes = []
+    for node in old_nodes:
+        if node.text_type is not TextType.TEXT:
+            new_nodes.append(node)
+        else:
+            delimiters = extract_markdown_bold(node.text)
+            remainder = node.text
+            for i in range(0, len(delimiters)):
+                text = delimiters[i]
+                split_node = remainder.split(f"**{text}**", 1)
+                new_nodes.append(TextNode(split_node[0], TextType.TEXT))
+                new_nodes.append(TextNode(text, TextType.BOLD))
+                remainder = split_node[1]
+            if remainder != "":
+                new_nodes.append(TextNode(remainder, TextType.TEXT))
+    return new_nodes
+
+def split_nodes_italic(old_nodes):
+    new_nodes = []
+    for node in old_nodes:
+        if node.text_type is not TextType.TEXT:
+            new_nodes.append(node)
+        else:
+            delimiters = extract_markdown_italic(node.text)
+            remainder = node.text
+            for i in range(0, len(delimiters)):
+                text = delimiters[i]
+                split_node = remainder.split(f"_{text}_", 1)
+                new_nodes.append(TextNode(split_node[0], TextType.TEXT))
+                new_nodes.append(TextNode(text, TextType.ITALIC))
+                remainder = split_node[1]
+            if remainder != "":
+                new_nodes.append(TextNode(remainder, TextType.TEXT))
+    return new_nodes
+
+def split_nodes_code(old_nodes):
+    new_nodes = []
+    for node in old_nodes:
+        if node.text_type is not TextType.TEXT:
+            new_nodes.append(node)
+        else:
+            delimiters = extract_markdown_code(node.text)
+            remainder = node.text
+            for i in range(0, len(delimiters)):
+                text = delimiters[i]
+                split_node = remainder.split(f"`{text}`", 1)
+                new_nodes.append(TextNode(split_node[0], TextType.TEXT))
+                new_nodes.append(TextNode(text, TextType.CODE))
+                remainder = split_node[1]
+            if remainder != "":
+                new_nodes.append(TextNode(remainder, TextType.TEXT))
+    return new_nodes

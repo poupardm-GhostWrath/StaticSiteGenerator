@@ -1,4 +1,6 @@
 from textnode import *
+from splitnode import *
+from extract_markdown import *
 
 
 class HTMLNode:
@@ -77,5 +79,19 @@ def text_node_to_html_node(text_node):
             return LeafNode("img", text_node.text, {"src":text_node.url})
         case _:
             raise Exception("Error: Invalid Text Type")
+        
+def text_to_textnodes(text):
+    nodes = [TextNode(text, TextType.TEXT)]
+    # Split images out
+    nodes = split_nodes_image(nodes)
+    # Split links out
+    nodes = split_nodes_link(nodes)
+    # Split bold out
+    nodes = split_nodes_bold(nodes)
+    # Split italic out
+    nodes = split_nodes_italic(nodes)
+    # Split code out
+    nodes = split_nodes_code(nodes)
+    return nodes
 
                 
