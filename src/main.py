@@ -28,8 +28,8 @@ def copy_folder_content(source, target):
             copy_folder_content(from_path, dest_path)
 
 def main():
-    basepath = sys.argv
-    if len(basepath) < 1:
+    basepath = sys.argv[0]
+    if basepath == "":
         basepath = "./"
     dir_path_content = basepath + dir_path_content
     dir_path_public = basepath + dir_path_public
