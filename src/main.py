@@ -28,26 +28,25 @@ def copy_folder_content(source, target):
             copy_folder_content(from_path, dest_path)
 
 def main():
-    basepath = sys.argv[0]
-    if basepath == "":
-        basepath = "./"
-    dir_path_content = basepath + dir_path_content
-    dir_path_public = basepath + dir_path_public
-    dir_path_static = basepath + dir_path_static
+    basepath = sys.argv[1]
+    dir_content = basepath + dir_path_content
+    dir_public = basepath + dir_path_public
+    dir_static = basepath + dir_path_static
+    tem_path = basepath + template_path
     
     print("Deleting public directory...")
-    if os.path.exists(dir_path_public):
-        shutil.rmtree(dir_path_public)
+    if os.path.exists(dir_public):
+        shutil.rmtree(dir_public)
 
     print("Copying static files to public directory...")
-    copy_folder_content(dir_path_static, dir_path_public)
+    copy_folder_content(dir_static, dir_public)
 
     print("Generating content...")
     generate_page_recursive(
         basepath,
-        dir_path_content, 
-        template_path, 
-        dir_path_public
+        dir_content, 
+        tem_path, 
+        dir_public
     )
 
 
