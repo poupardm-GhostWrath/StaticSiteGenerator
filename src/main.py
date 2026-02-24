@@ -1,45 +1,38 @@
 import os
 import shutil
+from page_generator import generate_page
+
+dir_path_static = "./static"
+dir_path_public = "./public"
 
 def copy_folder_content(source, target):
-    # Check if source exist
-    if os.path.exists(source) == False:
-        raise Exception("Invalid source")
-
-    # Get Absolute Path for source
-    source_abs = os.path.abspath(source)
-
     # Create target folder if doesn't exist
     if os.path.exists(target) == False:
         os.mkdir(target)
-    
-    # Get Absolute Path for target
-    target_abs = os.path.abspath(target)
-
-    # Check if target is not empty
-    if len(os.listdir(target_abs)) > 0:
-        # Delete entire target folder
-        shutil.rmtree(target_abs)
-        # Re-create target folder
-        os.mkdir(target_abs)
 
     # Get Content of Source Directory
-    source_content = os.listdir(source_abs)
-    for item in source_content:
+    for item in os.listdir(source):
+        from_path = os.path.join(source, item)
+        dest_path = os.path.join(target, item)
+        print(f" * {from_path} -> {dest_path}")
         # Check is item isfile
-        if os.path.isfile(os.path.join(source_abs, item)):
+        if os.path.isfile(from_path):
             # Copy file to target folder
-            shutil.copy(os.path.join(source_abs, item), target_abs)
+            shutil.copy(from_path, dest_path)
         else:
             # Copy folder content to target folder
-            copy_folder_content(os.path.join(source_abs, item), os.path.join(target_abs, item))
-        
-    
-    
-    
+            copy_folder_content(from_path, dest_path)
 
 def main():
-    copy_folder_content("static", "public")
+    print("Deleting public directory...")
+    if os.path.exists(dir_path_public):
+        shutil.rmtree(dir_path_public)
+
+    print("Copying static files to public directory...")
+    copy_folder_content(dir_path_static, dir_path_public)
+
+    generate_page("content/index.md", "template.html", "public/index.html")
+
     pass
 
 if __name__ == "__main__":
