@@ -3,10 +3,10 @@ import sys
 import shutil
 from page_generator import generate_page_recursive
 
-dir_path_static = "/static"
-dir_path_public = "/docs"
-dir_path_content = "/content"
-template_path = "/template.html"
+dir_path_static = "./static"
+dir_path_public = "./docs"
+dir_path_content = "./content"
+template_path = "./template.html"
 basepath = None
 
 def copy_folder_content(source, target):
