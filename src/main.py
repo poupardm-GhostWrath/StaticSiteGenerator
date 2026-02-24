@@ -3,10 +3,10 @@ import sys
 import shutil
 from page_generator import generate_page_recursive
 
-dir_path_static = "static"
-dir_path_public = "docs"
-dir_path_content = "content"
-template_path = "template.html"
+dir_path_static = "/static"
+dir_path_public = "/docs"
+dir_path_content = "/content"
+template_path = "/template.html"
 basepath = None
 
 def copy_folder_content(source, target):
@@ -29,27 +29,23 @@ def copy_folder_content(source, target):
 
 def main():
     if len(sys.argv) < 2:
-        basepath = "./"
+        basepath = "/"
     else:
         basepath = sys.argv[1]
-    dir_content = basepath + dir_path_content
-    dir_public = basepath + dir_path_public
-    dir_static = basepath + dir_path_static
-    tem_path = basepath + template_path
     
     print("Deleting public directory...")
-    if os.path.exists(dir_public):
-        shutil.rmtree(dir_public)
+    if os.path.exists(dir_path_public):
+        shutil.rmtree(dir_path_public)
 
     print("Copying static files to public directory...")
-    copy_folder_content(dir_static, dir_public)
+    copy_folder_content(dir_path_static, dir_path_public)
 
     print("Generating content...")
     generate_page_recursive(
         basepath,
-        dir_content, 
-        tem_path, 
-        dir_public
+        dir_path_content, 
+        template_path, 
+        dir_path_public
     )
 
 
