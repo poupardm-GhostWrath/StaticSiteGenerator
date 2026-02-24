@@ -1,5 +1,4 @@
-from block_markdown import markdown_to_html_node, extract_title
-from htmlnode import *
+from block_markdown import markdown_to_html_node
 import os
 
 def generate_page(from_path, template_path, dest_path):
@@ -28,7 +27,15 @@ def generate_page(from_path, template_path, dest_path):
 
     # Get dir for file
     dir_name = os.path.dirname(dest_path)
-    os.makedirs(dir_name, exist_ok=True)
+    if dir_name != "":
+        os.makedirs(dir_name, exist_ok=True)
     dest_file = open(dest_path, mode="w")
     amount_wrote = dest_file.write(new_html)
     dest_file.close()
+
+def extract_title(markdown):
+    lines = markdown.split("\n")
+    for line in lines:
+        if line.startswith("# "):
+            return line[2:]
+    raise ValueError("no title found")

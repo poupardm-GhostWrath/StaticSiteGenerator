@@ -4,6 +4,8 @@ from page_generator import generate_page
 
 dir_path_static = "./static"
 dir_path_public = "./public"
+dir_path_content = "./content"
+template_path = "./template.html"
 
 def copy_folder_content(source, target):
     # Create target folder if doesn't exist
@@ -31,9 +33,12 @@ def main():
     print("Copying static files to public directory...")
     copy_folder_content(dir_path_static, dir_path_public)
 
-    generate_page("content/index.md", "template.html", "public/index.html")
+    generate_page(
+        os.path.join(dir_path_content, "index.md"), 
+        template_path, 
+        os.path.join(dir_path_public, "index.html")
+    )
 
-    pass
 
 if __name__ == "__main__":
     main()
